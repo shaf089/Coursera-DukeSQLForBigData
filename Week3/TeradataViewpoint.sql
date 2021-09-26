@@ -198,14 +198,12 @@ ORDER BY total_returns DESC;
 ----------------
 -- In what state and zip code is the store that had the greatest total revenue 
 -- during the time period monitored in our dataset? 
-SELECT TOP 1 strinfo.zip, SUM((trnsact.sprice - skstinfo.cost)*trnsact.quantity) as profit
-FROM trnsact
-JOIN strinfo
-ON strinfo.store = trnsact.store 
-JOIN skstinfo
-ON skstinfo.sku = trnsact.sku AND skstinfo.store = trnsact.store
-WHERE trnsact.stype = 'P' AND trnsact.sprice <> 0
-GROUP BY strinfo.zip
-ORDER BY profit DESC;
+SELECT TOP 10 strinfo.store, strinfo.state, strinfo.city, strinfo.zip, SUM(trnsact.amt)
+FROM strinfo
+LEFT JOIN trnsact
+ON strinfo.store=trnsact.store
+WHERE stype = 'P'
+GROUP BY strinfo.store, strinfo.state, strinfo.city, strinfo.zip
+ORDER BY SUM(trnsact.amt) DESC;
 
 
